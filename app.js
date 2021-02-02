@@ -1,34 +1,34 @@
 const express = require('express');
+const mongo = require('mongodb');
+
+const MongoClient = mongo.MongoClient;
 const app = express();
 const port = process.env.PORT || 9900;
-const mongo = require('mongodb');
-const MongoClient = mongo.MongoClient;
-const bodyParser = require('body-parser');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 
-// dev ini
-//"mongodb+srv://dev:mongo123@cluster0.f8vmc.mongodb.net/edurekinternship?retryWrites=true&w=majority"
-
-
-
-// mongodb+srv://pratik:pratik@cluster0.996mo.mongodb.net/eduNovIntern?retryWrites=true&w=majority'
-
-const mongourl = "mongodb+srv://pratik:pratik@cluster0.996mo.mongodb.net/eduNovIntern?retryWrites=true&w=majority";
-let db;
+let a;
+const url = 'mongodb+srv://pratik:pratik@cluster0.996mo.mongodb.net/eduNovIntern?retryWrites=true&w=majority';
+let db ;
 
 app.use(cors());
 app.use(bodyParser.urlencoded({extended:true}));
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
-//health Check
-app.get('/',(req,res) => {
-    res.send("Health Ok Pratik");
+
+
+
+
+app.get('/',(req,res)=>{
+    res.status(200).send('Health Ok');
 });
 
-//city Route
-app.get('/city',(req,res) => {
+
+// get city (Sort and Pagination)
+app.get('/city',(req,res)=>{
     let sortcondition = {city_name:1};
+
     let limit =100
     if(req.query.sort && req.query.limit ){
       sortcondition = {city_name:Number(req.query.sort)};
@@ -39,91 +39,97 @@ app.get('/city',(req,res) => {
     }else if(req.query.limit){
       limit =Number(req.query.limit)
     }
-    db.collection('city').find().sort(sortcondition).limit(limit).toArray((err,result) => {
-      if(err) throw err;
-      res.send(result);
-    })
-   
+
+
+    db.collection('city').find().sort(sortcondition).limit(limit).toArray((err,result)=>{
+        res.send(result);
+    });
 });
 
-//rest per city
-app.get('/rest/:id',(req,res) =>{
-  var id = req.params.id
-  db.collection('rest').find({_id:id}).toArray((err,result) => {
-    if(err) throw err;
-    res.send(result)
-  })
-})
-
-//Rest route
-app.get('/rest',(req,res) => {
-  var condition ={};
+// get Restaurant (Filter)
+app.get('/rest',(req,res)=>{
+    let condition ={};
     //meal +cost
     if(req.query.mealtype && req.query.lcost && req.query.hcost){
-      condition={$and:[{"type.mealtype":req.query.mealtype},{cost:{$lt:Number(req.query.hcost),$gt:Number(req.query.lcost)}}]}
+        condition={$and:[{"type.mealtype":req.query.mealtype},{cost:{$lt:Number(req.query.hcost),$gt:Number(req.query.lcost)}}]}
     }
-    //meal +city
+    //meal + city
     else if(req.query.mealtype && req.query.city){
-      condition={$and:[{"type.mealtype":req.query.mealtype},{city:req.query.city}]}
+        condition={$and:[{"type.mealtype":req.query.mealtype},{city:req.query.city}]}
     }
-    //meal +cuisine
+    //meal + cuisine
     else if(req.query.mealtype && req.query.cuisine){
-      condition={$and:[{"type.mealtype":req.query.mealtype},{"Cuisine.cuisine":req.query.cuisine}]}
+        condition={$and:[{"type.mealtype":req.query.mealtype},{"Cuisine.cuisine":req.query.cuisine}]}
     }
-    //meal
+      //meal
     else if(req.query.mealtype){
-      condition={"type.mealtype":req.query.mealtype}
+        condition={"type.mealtype":req.query.mealtype}
     }
-    //city
+      //city
     else if(req.query.city){
-      condition={city:req.query.city}
+        condition={city:req.query.city}
     }
-  db.collection('rest').find(condition).toArray((err,result)=>{
-    if(err) throw err;
-    res.send(result)
-  }) 
-})
 
-//MealType Route
-app.get('/meal',(req,res) => {
-  db.collection('meal').find().toArray((err,result) => {
-    if(err) throw err;
-    res.send(result)
-  })
-})
+    db.collection('rest').find(condition).toArray((err,result)=>{
+        if (err) throw err;
 
-//cuisine route
-app.get('/cuisine',(req,res) => {
-  db.collection('cuisine').find().toArray((err,result) => {
-    if(err) throw err;
-    res.send(result)
-  })
-})
+        res.send(result);
+    })
+    
+});
+
 
 //placeorder
 app.post('/placeorder',(req,res)=>{
-  db.collection('orders').insert(req.body,(err,result) => {
-    if(err) throw err;
-    res.send('data added');
+    db.collection('orders').insert(req.body,(err,result) => {
+      if(err) throw err;
+      res.send('data added');
+    })
   })
-})
-
-//get all bookings
-app.get('/orders',(req,res) => {
-  db.collection('orders').find({}).toArray((err,result) => {
-    if(err) throw err;
-    res.send(result)
-  })
-})
-
-//connection with mongo serer
-MongoClient.connect(mongourl,(err,connection) => {
-  if(err) console.log(err);
-  db = connection.db('edurekinternship');
-
-  app.listen(port,(err) => {
-    if(err) throw err;
-    console.log(`Server is running on port ${port}`)
+  
+  //get all bookings
+  app.get('/orders',(req,res) => {
+    db.collection('orders').find({}).toArray((err,result) => {
+      if(err) throw err;
+      res.send(result)
+    })
   })
 
+
+
+
+//insert Restaurant
+app.post('/insertRest',(req,res)=>{
+    db.collection('rest').insertMany(req.body,(err,result)=>{
+        if(err) throw err;
+        res.send('data added');
+    });
+});
+
+
+//insert City
+app.post('/insertCity',(req,res)=>{
+    db.collection('city').insertMany(req.body,(err,result)=>{
+        if(err) throw err;
+        res.send('City added');
+    });
 })
+
+
+
+
+
+MongoClient.connect(url,(err,conn)=>{
+
+    if(err) throw err;
+    db = conn.db('eduNovIntern');
+    
+    app.listen(port,(err,result)=>{
+        if(err) throw err;
+    
+        console.log(`Running on port ${port}`);
+    });
+
+})
+
+
