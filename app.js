@@ -46,6 +46,16 @@ app.get('/city',(req,res)=>{
     });
 });
 
+app.get('/meal',(req,res)=>{
+
+  db.collection('mealType').find().toArray((err,result)=>{
+    if(err) throw err;
+
+    res.json(result);
+  })
+})
+
+
 // get Restaurant (Filter)
 app.get('/rest',(req,res)=>{
     let condition ={};
