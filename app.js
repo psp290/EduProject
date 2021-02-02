@@ -23,7 +23,7 @@ app.use(bodyParser.json())
 
 //health Check
 app.get('/',(req,res) => {
-    res.send("Health Ok");
+    res.send("Health Ok Pratik");
 });
 
 //city Route
