@@ -49,7 +49,7 @@ app.get('/city',(req,res) => {
 //rest per city
 app.get('/rest/:id',(req,res) =>{
   var id = req.params.id
-  db.collection('restaurent').find({_id:id}).toArray((err,result) => {
+  db.collection('rest').find({_id:id}).toArray((err,result) => {
     if(err) throw err;
     res.send(result)
   })
@@ -78,7 +78,7 @@ app.get('/rest',(req,res) => {
     else if(req.query.city){
       condition={city:req.query.city}
     }
-  db.collection('restaurent').find(condition).toArray((err,result)=>{
+  db.collection('rest').find(condition).toArray((err,result)=>{
     if(err) throw err;
     res.send(result)
   }) 
@@ -86,7 +86,7 @@ app.get('/rest',(req,res) => {
 
 //MealType Route
 app.get('/meal',(req,res) => {
-  db.collection('mealtype').find().toArray((err,result) => {
+  db.collection('meal').find().toArray((err,result) => {
     if(err) throw err;
     res.send(result)
   })
