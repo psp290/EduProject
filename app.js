@@ -106,6 +106,16 @@ app.post('/placeorder',(req,res)=>{
   })
 
 
+//rest details
+app.get('/rest/:id',(req,res) =>{
+  var id = req.params.id
+  db.collection('rest').find({_id:id}).toArray((err,result) => {
+    if(err) throw err;
+    res.send(result)
+  })
+})
+
+
 
 
 //insert Restaurant
