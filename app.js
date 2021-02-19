@@ -80,11 +80,25 @@ app.get('/rest',(req,res)=>{
         condition={city:req.query.city}
     }
 
-    db.collection('rest').find(condition).toArray((err,result)=>{
+    var sortcost={}
+    if(req.query.sort)
+    {
+      sortcost={cost:Number(req.query.sort)}
+      db.collection('rest').find(condition).sort(sortcost).toArray((err,result)=>{
         if (err) throw err;
 
         res.send(result);
-    })
+      })
+    }
+    else{
+
+      db.collection('rest').find(condition).toArray((err,result)=>{
+        if (err) throw err;
+
+        res.send(result);
+      })
+      
+    }
     
 });
 
