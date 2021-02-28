@@ -88,7 +88,7 @@ app.get('/rest',(req,res)=>{
     const page = Number(req.query.page || "0")
 
 
-    const documents = db.collection('rest').count();
+    
     
 
     var sortcost={}
@@ -100,13 +100,20 @@ app.get('/rest',(req,res)=>{
       db.collection('rest').find(condition).limit(Page_size).skip(Page_size*page).sort(sortcost).toArray((err,result)=>{
         if (err) throw err;
 
+
+        db.collection('rest').find(condition).toArray((err,res1)=>{
+
+          const documents = res1.length;
+
+          res.json({
+            current_page:Number(page),
+            total_pages:Math.ceil(documents/Page_size),
+            data:result
+          });
+
+        })
         
 
-        res.json({
-          current_page:Number(page),
-          total_pages:Math.ceil(documents/Page_size),
-          data:result
-        });
 
       })
     }
@@ -115,13 +122,18 @@ app.get('/rest',(req,res)=>{
       db.collection('rest').find(condition).limit(Page_size).skip(Page_size*page).toArray((err,result)=>{
         if (err) throw err;
 
-        
+        db.collection('rest').find(condition).toArray((err,res1)=>{
 
-        res.json({
-          current_page:Number(page),
-          total_pages:Math.ceil(documents/Page_size),
-          data:result
-        });
+          const documents = res1.length;
+
+          res.json({
+            current_page:Number(page),
+            total_pages:Math.ceil(documents/Page_size),
+            data:result
+          });
+          
+        })
+        
 
       })
       
