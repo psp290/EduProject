@@ -88,7 +88,7 @@ app.get('/rest',(req,res)=>{
     const page = Number(req.query.page || "0")
 
 
-    const documents = db.rest.countDocuments(condition);
+    
 
     var sortcost={}
     if(req.query.sort)
@@ -99,9 +99,11 @@ app.get('/rest',(req,res)=>{
       db.collection('rest').find(condition).limit(Page_size).skip(Page_size*page).sort(sortcost).toArray((err,result)=>{
         if (err) throw err;
 
+        const documents = result.length;
+
         res.json({
           current_page:Number(page),
-          total_doc:page,
+          total_doc:documents,
           total_pages:Math.ceil(documents/Page_size),
           data:result
         });
