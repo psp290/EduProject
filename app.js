@@ -127,7 +127,8 @@ app.get('/rest',(req,res)=>{
           const documents = res1.length;
 
           res.json({
-            current_page:Number(page)+1,
+            current_page:Number(page),
+            total_record:documents,
             total_pages:Math.ceil(documents/Page_size),
             data:result
           });
