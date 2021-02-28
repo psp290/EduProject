@@ -59,6 +59,9 @@ app.get('/meal',(req,res)=>{
 // get Restaurant (Filter)
 app.get('/rest',(req,res)=>{
     let condition ={};
+
+  
+
     //meal +cost
     if(req.query.mealtype && req.query.lcost && req.query.hcost){
         condition={$and:[{"type.mealtype":req.query.mealtype},{cost:{$lt:Number(req.query.hcost),$gt:Number(req.query.lcost)}}]}
@@ -99,7 +102,7 @@ app.get('/rest',(req,res)=>{
       })
       
     }
-    
+
 });
 
 
@@ -117,6 +120,18 @@ app.post('/placeorder',(req,res)=>{
       if(err) throw err;
       res.send(result)
     })
+  })
+
+
+  //get user all bookings
+
+  app.get('/orders/:name',(req,res) => {
+    var name = req.params.name;
+    db.collection('orders').find({name:name}).toArray((err,result) => {
+      if(err) throw err;
+      res.send(result)
+    })
+
   })
 
 
