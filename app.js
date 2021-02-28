@@ -98,7 +98,7 @@ app.get('/rest',(req,res)=>{
     }
     else{
 
-      db.collection('rest').find(condition).toArray((err,result)=>{
+      db.collection('rest').find(condition).limit(Page_size).skip(Page_size*page).toArray((err,result)=>{
         if (err) throw err;
 
         res.send(result);
