@@ -88,7 +88,7 @@ app.get('/rest',(req,res)=>{
     const page = Number(req.query.page || "0")
 
 
-    const documents = db.collection('rest').find(condition).count();
+    const documents = db.collection('rest').countDocuments(condition);
 
     var sortcost={}
     if(req.query.sort)
