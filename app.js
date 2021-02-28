@@ -83,11 +83,14 @@ app.get('/rest',(req,res)=>{
         condition={city:req.query.city}
     }
 
+    const Page_size = 3;
+
+    const page = Number(req.query.page || "0")
     var sortcost={}
     if(req.query.sort)
     {
       sortcost={cost:Number(req.query.sort)}
-      db.collection('rest').find(condition).sort(sortcost).toArray((err,result)=>{
+      db.collection('rest').find(condition).limit(Page_size).skip(Page_size*page).sort(sortcost).toArray((err,result)=>{
         if (err) throw err;
 
         res.send(result);
@@ -114,9 +117,10 @@ app.post('/placeorder',(req,res)=>{
     })
   })
   
+  
   //get all bookings
   app.get('/orders',(req,res) => {
-    db.collection('orders').find({}).toArray((err,result) => {
+    db.collection('orders').find({}).limit().toArray((err,result) => {
       if(err) throw err;
       res.send(result)
     })
