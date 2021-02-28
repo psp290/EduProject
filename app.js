@@ -86,14 +86,24 @@ app.get('/rest',(req,res)=>{
     const Page_size = 3;
 
     const page = Number(req.query.page || "0")
+
+
     var sortcost={}
     if(req.query.sort)
     {
       sortcost={cost:Number(req.query.sort)}
+
+      const documents = db.collection('rest').find(condition).count();
+
       db.collection('rest').find(condition).limit(Page_size).skip(Page_size*page).sort(sortcost).toArray((err,result)=>{
         if (err) throw err;
 
-        res.send(result);
+        res.json({
+          current_page:Number(req.query.page),
+          total_pages:Math.ceil(documents/Page_size),
+          data:result
+        });
+        
       })
     }
     else{
