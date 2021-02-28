@@ -100,7 +100,7 @@ app.get('/rest',(req,res)=>{
         if (err) throw err;
 
         res.json({
-          current_page:Number(req.query.page),
+          current_page:Number(page),
           total_pages:Math.ceil(documents/Page_size),
           data:result
         });
@@ -113,11 +113,11 @@ app.get('/rest',(req,res)=>{
         if (err) throw err;
 
         res.json({
-          current_page:Number(req.query.page),
+          current_page:Number(page),
           total_pages:Math.ceil(documents/Page_size),
           data:result
         });
-        
+
       })
       
     }
