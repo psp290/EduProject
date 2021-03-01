@@ -195,20 +195,9 @@ app.post('/placeorder',(req,res)=>{
 // login user 
 
 app.get('/login',(req,res) => {
-  db.collection('users').find({},(err,data) => {
-
-    res.send(data);
-    /*
-      if(err)  return res.status(500).send('Error while login');
-      if(!data)  return res.status(400).send('No User Found Register first');
-      else{
-          const passIsValid = bcrypt.compareSync(req.body.password,data.password)
-          if(!passIsValid) res.status(401).send('Wrong password');
-          var token = jwt.sign({id:data._id},'ABC',{expiresIn:86400})
-          return res.json({auth:true,token:token})
-      }
-
-      */
+  db.collection('users').find().toArray((err,result)=>{
+      if(err) throw err;
+      res.send(result);
   })
 })
 
