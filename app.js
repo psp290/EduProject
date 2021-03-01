@@ -194,8 +194,8 @@ app.post('/placeorder',(req,res)=>{
 
 // login user 
 
-app.post('/login',(req,res) => {
-  db.collection('users').find({email:req.body.email},(err,data) => {
+app.get('/login',(req,res) => {
+  db.collection('users').find({},(err,data) => {
 
     res.send(data);
     /*
