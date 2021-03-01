@@ -202,7 +202,7 @@ app.post('/login',(req,res) => {
     else{
         const passIsValid = bcrypt.compareSync(req.body.password,data[0].password)
         if(!passIsValid) res.status(401).send('Wrong password');
-        var token = jwt.sign({jwt_id:data[0]._id},'ABC',{expiresIn:86400})
+        var token = jwt.sign({id:data[0]._id},'ABC',{expiresIn:86400})
         return res.send({auth:true,token:token})
     }
 
@@ -217,8 +217,11 @@ app.get('/userInfo',(req,res) => {
   if(!token) return res.send({auth:false,token:"No Token Provided"})
   jwt.verify(token,'ABC',(err,data) => {
       if(err) return res.send({auth:false,token:"Invalid Token Provided"})
-      db.collection('users').find({_id:data.id}).toArray((err,result)=>{
-        res.send(data);
+      db.collection('users').find(data.id).toArray((err,result)=>{
+        res.json({
+          token_data:data,
+          resu:result
+        });
       })
   })
 
