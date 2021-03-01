@@ -226,6 +226,7 @@ app.get('/userInfo',(req,res) => {
             return res.send({
               username:result[i].username,
               email:result[i].email,
+              avatar_url:result[i].avatar_url,
               role:result[i].role
             });
           }
