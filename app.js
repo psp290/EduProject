@@ -223,7 +223,11 @@ app.get('/userInfo',(req,res) => {
         {
           if(data.id==result[i]._id)
           {
-            return res.send(result[i]);
+            return res.send({
+              name:result[i].name,
+              email:result[i].email,
+              role:result[i].role
+            });
           }
         }
         
