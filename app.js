@@ -186,7 +186,7 @@ app.post('/placeorder',(req,res)=>{
 
     db.collection('users').insert(req.body,(err,user)=>{
       if(err) throw err;
-      res.send('User register');
+      res.send(user);
     })
     
 });
