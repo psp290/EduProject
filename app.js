@@ -105,9 +105,15 @@ app.get('/rest',(req,res)=>{
 
           const documents = res1.length;
 
+          var pageArray=[];
+          for(var i=0;i<Math.ceil(documents/Page_size);i++)
+          {
+            pageArray.push(i+1);
+          }
+
           res.json({
             current_page:Number(page)+1,
-            total_pages:Math.ceil(documents/Page_size),
+            total_pages:pageArray,
             data:result
           });
 
@@ -126,10 +132,16 @@ app.get('/rest',(req,res)=>{
 
           const documents = res1.length;
 
+          var pageArray=[];
+          for(var i=0;i<Math.ceil(documents/Page_size);i++)
+          {
+            pageArray.push(i+1);
+          }
+
           res.json({
             current_page:Number(page),
             total_record:documents,
-            total_pages:Math.ceil(documents/Page_size),
+            total_pages:pageArray,
             data:result
           });
           
