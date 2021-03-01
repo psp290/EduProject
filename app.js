@@ -7,6 +7,9 @@ const port = process.env.PORT || 9900;
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
 
 let a;
 const url = 'mongodb+srv://pratik:pratik@cluster0.996mo.mongodb.net/eduNovIntern?retryWrites=true&w=majority';
@@ -171,6 +174,38 @@ app.post('/placeorder',(req,res)=>{
       res.send(result)
     })
   })
+
+
+
+  //User register
+
+  app.post('/register',(req,res) => {
+    var hashpassword = bcrypt.hashSync(req.body.password);
+    req.body.password =hashpassword;
+    req.body.role = req.body.role?req.body.role:'User';
+
+    db.collection('users').insert(req.body,(err,user)=>{
+      if(err) throw err;
+      res.send('User register');
+    })
+    
+});
+
+
+// login user 
+
+app.post('/login',(req,res) => {
+  db.collection('users').find({email:req.body.email},(err,data) => {
+      if(err)  return res.status(500).send('Error while login');
+      if(!data)  return res.status(400).send('No User Found Register first');
+      else{
+          const passIsValid = bcrypt.compareSync(req.body.password,data.password)
+          if(!passIsValid) res.status(401).send('Wrong password');
+          var token = jwt.sign({id:data._id},'ABC',{expiresIn:86400})
+          return res.send({auth:true,token:token})
+      }
+  })
+})
 
 
   //get user all bookings
