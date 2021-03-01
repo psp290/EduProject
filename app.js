@@ -202,7 +202,7 @@ app.post('/login',(req,res) => {
     else{
         const passIsValid = bcrypt.compareSync(req.body.password,data[0].password)
         if(!passIsValid) res.status(401).send('Wrong password');
-        var token = jwt.sign({id:data._id},'ABC',{expiresIn:86400})
+        var token = jwt.sign({id:data[0]._id},'ABC',{expiresIn:86400})
         return res.send({auth:true,token:token})
     }
 
