@@ -180,7 +180,7 @@ app.post('/placeorder',(req,res)=>{
   //User register
 
   app.post('/register',(req,res) => {
-    var hashpassword = bcrypt.hashSync(req.body.password);
+    var hashpassword = bcrypt.hashSync(req.body.password,0);
     req.body.password =hashpassword;
     req.body.role = req.body.role?req.body.role:'User';
 
@@ -206,6 +206,21 @@ app.post('/login',(req,res) => {
       }
   })
 })
+
+// get user info
+
+app.get('/userInfo',(req,res) => {
+  var token = req.headers['x-access-token'];
+  if(!token) return res.send({auth:false,token:"No Token Provided"})
+  jwt.verify(token,config.secert,(err,data) => {
+      if(err) return res.send({auth:false,token:"Invalid Token Provided"})
+      db.collection('users').find({_id:data.id},{password:0},(err,result) => {
+          res.send(result)
+      })
+  })
+
+})
+
 
 
   //get user all bookings
