@@ -217,9 +217,8 @@ app.get('/userInfo',(req,res) => {
   if(!token) return res.send({auth:false,token:"No Token Provided"})
   jwt.verify(token,'ABC',(err,data) => {
       if(err) return res.send({auth:false,token:"Invalid Token Provided"})
-      db.collection('users').find({_id:data.id}).toArray((err,result)=>{
-        
-        res.send(result[0]);
+      db.collection('users').find().toArray((err,result)=>{
+        res.json(data);
       })
   })
 
