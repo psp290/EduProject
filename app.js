@@ -220,7 +220,7 @@ app.get('/userInfo',(req,res) => {
       db.collection('users').find(data.id).toArray((err,result)=>{
         res.json({
           token_data:data,
-          resu:result
+          result:result
         });
       })
   })
