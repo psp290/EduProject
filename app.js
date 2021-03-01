@@ -196,6 +196,9 @@ app.post('/placeorder',(req,res)=>{
 
 app.post('/login',(req,res) => {
   db.collection('users').find({email:req.body.email},(err,data) => {
+
+    res.send(data);
+    /*
       if(err)  return res.status(500).send('Error while login');
       if(!data)  return res.status(400).send('No User Found Register first');
       else{
@@ -204,6 +207,8 @@ app.post('/login',(req,res) => {
           var token = jwt.sign({id:data._id},'ABC',{expiresIn:86400})
           return res.json({auth:true,token:token})
       }
+
+      */
   })
 })
 
