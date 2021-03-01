@@ -139,7 +139,7 @@ app.get('/rest',(req,res)=>{
           }
 
           res.json({
-            current_page:Number(page),
+            current_page:Number(page)+1,
             total_record:documents,
             total_pages:pageArray,
             data:result
