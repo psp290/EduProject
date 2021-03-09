@@ -60,6 +60,23 @@ app.get('/meal',(req,res)=>{
 
 
 // get Restaurant (Filter)
+
+app.get('/cityRest',(req,res)=>{
+
+    condition = {};
+
+    if(req.query.city)
+    {
+      condition = {city:req.query.city};
+    }
+    db.collection('rest').find(condition).toArray((err,result)=>{
+      if(err) throw err;
+
+      res.send(result);
+      
+    })
+})
+
 app.get('/rest',(req,res)=>{
     let condition ={};
 
