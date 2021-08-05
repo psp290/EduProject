@@ -299,6 +299,21 @@ app.post('/insertCity',(req,res)=>{
 
 
 
+//extras
+
+app.post('/newProduct',(req,res)=>{
+  db.collection('product').insertMany(req.body,(err,result)=>{
+    if(err) throw err;
+    res.send('data added');
+  })
+})
+
+app.get('/products',(req,res) => {
+  db.collection('product').find({}).toArray((err,result) => {
+    if(err) throw err;
+    res.send(result)
+  })
+})
 
 
 MongoClient.connect(url,(err,conn)=>{
